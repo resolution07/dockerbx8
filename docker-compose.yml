@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    volumes:
+      - ./app:/var/www/bitrix
+    networks:
+      - eobackend
+  nginx:
+    build:
+      context: ./docker/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - db
+    volumes:
+      - ./app:/var/www/bitrix
+      - ./docker/nginx/config:/etc/nginx/conf.d
+      - ./docker/nginx/log:/var/log/nginx
+    links:
+      - app
+    networks:
+      - eobackend
+  db:
+    build:
+      context: ./docker/mysql
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    networks:
+      - eobackend
+
+  redis:
+    build: ./docker/redis
+    ports:
+      - '6379:6379'
+    networks:
+      - eobackend
+
+networks:
+  eobackend:
+    driver: bridge
