@@ -1,7 +1,7 @@
 
 # DockerBX
 
-Минимальное окржение для работы с проектом на базе BitrixFramework
+Минимальное окржение для работы с проектом на базе BitrixFramework (под PHP 8, MySQL 8, Nginx, Redis)
 
 
 ## Установка
